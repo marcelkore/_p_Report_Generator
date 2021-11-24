@@ -1,3 +1,20 @@
+boto_creds
+boto_creds.csv
+mongo_creds
+mongo_creds.csv
+anubis_secrets
+anubis_secrets.csv
+sandbox.ipynb
+/dask-worker-space/**
+/.pytest_cahce/**
+.dask-worker
+/.pytest_cache/**
+/__pycache__/**
+/.vscode/**
+.gitignore
+students.csv
+teachers.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
