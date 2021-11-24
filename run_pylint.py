@@ -5,7 +5,7 @@ from pylint import lint
 
 BUCKET_NAME = os.environ.get("bucket_name")
 
-THRESHOLD = 9
+THRESHOLD = os.environ.get("threshold")
 # pylint: disable=too-many-arguments
 
 run = lint.Run(["report_generator.py"], do_exit=False)

@@ -7,6 +7,8 @@ env:
   sf_password: ${{ secrets.SF_PASSWORD }}
   sf_url: ${{ secrets.SF_URL }}
 
+  threshold: ${{ secrets.THRESHOLD }}
+
   mongo_username: ${{ secrets.MONGO_USERNAME }}
   mongo_password: ${{ secrets.MONGO_PASSWORD }}
 
