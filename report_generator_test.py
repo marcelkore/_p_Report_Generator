@@ -19,8 +19,8 @@ from report_generator import (
 
 # # mongo creds
 
-# mng_username = args[1]
-# mng_password = args[2]
+mng_username = args[1]
+mng_password = args[2]
 
 # # Access credentials stored in github secrets
 # bucket_name = args[3]

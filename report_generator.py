@@ -199,7 +199,9 @@ def get_dict_values(dic: dict) -> list:
 
 
 # appending student data for json
-def append_student_data(studentname: str, teachername: str, class_id: str) -> None:
+def append_student_data(
+    studentname: str, teachername: str, class_id: str
+) -> None:
     """
     Appending student name, teacher name and class id into the json object
     :param studentname:This will be string containing student name
@@ -239,7 +241,9 @@ def process_teachers(
     teachers_df.drop(columns=["_id"], inplace=True)
 
     # remove duplicate entries
-    teachers_df = teachers_df.loc[teachers_df.astype(str).drop_duplicates().index]
+    teachers_df = teachers_df.loc[
+        teachers_df.astype(str).drop_duplicates().index
+    ]
 
     # convert dataframe to dictionary
     teacher_dict = teachers_df.to_dict("records")
@@ -343,29 +347,20 @@ def main() -> None:
     dump_json function to output our desired result
     """
 
-    # print("The credentials below are for the final report location: ")
-    # s3_bucket = input("Please enter the s3 bucket name:")
-    # s3_access_key_id = input("Please enter the s3 access key id:")
-    # s3_secret_key = input("Please enter the s3 secret key:")
-    # json_file_output_name = input("Please enter the json file name: ")
-    # sf_username = input("Please enter the snowflake username:")
-    # sf_password = input("Please enter the snowflake password:")
-    # sf_url = input("Please enter the snowflake account URL:")
-    # mongo_username = input("Please enter the mongo username:")
-    # mongo_password = input("Please enter the mongo password:")
-
     print("The credentials below are for the final report location: ")
-    s3_bucket = "sandbox-a1"
-    s3_access_key_id = "AKIAVZXD7XRUTAV3XYHP"
-    s3_secret_key = "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"
-    json_file_output_name = "Swathi"
-    sf_username = "anubis"
-    sf_password = "BrDvkQ*2@&VmMBdhAvZ!pZ6HT^"
-    sf_url = "faa50386.us-east-1"
-    mongo_username = "anubis"
-    mongo_password = "Yu37Wa4whbWfg58G"
+    s3_bucket = input("Please enter the s3 bucket name:")
+    s3_access_key_id = input("Please enter the s3 access key id:")
+    s3_secret_key = input("Please enter the s3 secret key:")
+    json_file_output_name = input("Please enter the json file name: ")
+    sf_username = input("Please enter the snowflake username:")
+    sf_password = input("Please enter the snowflake password:")
+    sf_url = input("Please enter the snowflake account URL:")
+    mongo_username = input("Please enter the mongo username:")
+    mongo_password = input("Please enter the mongo password:")
 
-    process_students(sf_username, sf_password, sf_url, mongo_username, mongo_password)
+    process_students(
+        sf_username, sf_password, sf_url, mongo_username, mongo_password
+    )
 
     dump_json(
         bucket_name=s3_bucket,
