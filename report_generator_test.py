@@ -4,6 +4,10 @@ This script is used to test the report generator script.
 """
 import json
 import os
+import sys
+
+args: str = sys.argv
+
 
 from report_generator import (
     clean_str,
@@ -13,21 +17,21 @@ from report_generator import (
     upload_file_to_s3_secure,
 )
 
-# mongo creds
+# # mongo creds
 
-mng_username = os.environ["mongo_username"]
-mng_password = os.environ["mongo_password"]
+# mng_username = args[1]
+# mng_password = args[2]
 
-# Access credentials stored in github secrets
-bucket_name = os.environ["B"]
-FILE_NAME = "TEST_FILE.json"
-access_key_id = os.environ["access_key_id"]
-aws_secret_key = os.environ["access_secret_key"]
+# # Access credentials stored in github secrets
+# bucket_name = args[3]
+# FILE_NAME = "pytest.json"
+# access_key_id = args[4]
+# aws_secret_key = args[5]
 
-# snowflake credentials
-sf_username = os.environ["sf_username"]
-sf_password = os.environ["sf_password"]
-sf_url = os.environ["sf_url"]
+# # snowflake credentials
+# sf_username = args[6]
+# sf_password = args[7]
+# sf_url = args[8]
 
 
 def test_clean_str() -> None:

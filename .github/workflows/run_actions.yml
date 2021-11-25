@@ -1,16 +1,13 @@
 name: Run Pytest and Linting with Pylint and Flake8
 env:
-  bucket_name: ${{ secrets.BUCKET_NAME }}
-  access_key_id: ${{ secrets.ACCESS_KEY_ID }}
-  aws_secret_key: ${{ secrets.ACCESS_SECRET_KEY }}
-  sf_username: ${{ secrets.SF_USERNAME }}
-  sf_password: ${{ secrets.SF_PASSWORD }}
-  sf_url: ${{ secrets.SF_URL }}
-
-  threshold: ${{ secrets.THRESHOLD }}
-
-  mongo_username: ${{ secrets.MONGO_USERNAME }}
-  mongo_password: ${{ secrets.MONGO_PASSWORD }}
+  BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+  AWS_SECRET_KEY: ${{ secrets.ACCESS_SECRET_KEY }}
+  SF_USERNAME: ${{ secrets.SF_USERNAME }}
+  SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+  SF_URL: ${{ secrets.SF_URL }}
+  MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
 
 on: [push, pull_request]
 
@@ -42,20 +39,15 @@ jobs:
       run: |
         python -m run_pylint.py
 
-    # - name: Run Flake8
-    #   run: |
-    #     python -m flake8
-
-    # - name: Run Pytest
-    #   env:
-    #     bucket_name: ${{ secrets.BUCKET_NAME }}
-    #     access_key_id: ${{ secrets.ACCESS_KEY_ID }}
-    #     aws_secret_key: ${{ secrets.ACCESS_SECRET_KEY }}
-    #     sf_username: ${{ secrets.SF_USERNAME }}
-    #     sf_password: ${{ secrets.SF_PASSWORD }}
-    #     sf_url: ${{ secrets.SF_URL }}
-
-    #     mongo_username: ${{ secrets.MONGO_USERNAME }}
-    #     mongo_password: ${{ secrets.MONGO_PASSWORD }}
-    #   run: |
-    #     python -m pytest
+    - name: Run Pytest
+      env:
+        BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+        ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+        AWS_SECRET_KEY: ${{ secrets.ACCESS_SECRET_KEY }}
+        SF_USERNAME: ${{ secrets.SF_USERNAME }}
+        SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+        SF_URL: ${{ secrets.SF_URL }}
+        MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+        MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+      run: |
+        python -m pytest

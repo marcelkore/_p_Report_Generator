@@ -51,24 +51,24 @@ def connect_mongo(
         # connect to mongodb
         # client = MongoClient(mongo_uri, username=username, password=password)
         client = pymongo.MongoClient(
-            f"mongodb+srv://{username}:{password}\
-            @anubis-cluster.u6kla.mongodb.net/anubis?retryWrites=true&w=majority"
+            f"mongodb+srv://{username}:{password}@anubis-cluster.u6kla.mongodb.net/{database}retryWrites=true&w=majority"
         )
+
+        # get database and collection
+        mydb = client[database]
+        mycol = mydb[collection]
+
+        # get data
+        mongo_df = pd.DataFrame(list(mycol.find()))
+
+        client.close()
+        return mongo_df
+
     # catch pymongo errors
     except pymongo.errors.ServerSelectionTimeoutError as error:
         print("ERROR - CANNOT CONNECT TO MONGO")
         print(error)
         sys.exit()
-
-    # get database and collection
-    mydb = client[database]
-    mycol = mydb[collection]
-
-    # get data
-    mongo_df = pd.DataFrame(list(mycol.find()))
-
-    client.close()
-    return mongo_df
 
 
 def connect_sf(
@@ -127,7 +127,6 @@ def connect_sf(
         print(error)
     finally:
         cursor.close()
-        sys.exit()
 
     ctx.close()
 
@@ -200,9 +199,7 @@ def get_dict_values(dic: dict) -> list:
 
 
 # appending student data for json
-def append_student_data(
-    studentname: str, teachername: str, class_id: str
-) -> None:
+def append_student_data(studentname: str, teachername: str, class_id: str) -> None:
     """
     Appending student name, teacher name and class id into the json object
     :param studentname:This will be string containing student name
@@ -241,12 +238,8 @@ def process_teachers(
     teachers_df = connect_mongo(mongo_username, mongo_password)
     teachers_df.drop(columns=["_id"], inplace=True)
 
-    print(teachers_df.head(1))
-
     # remove duplicate entries
-    teachers_df = teachers_df.loc[
-        teachers_df.astype(str).drop_duplicates().index
-    ]
+    teachers_df = teachers_df.loc[teachers_df.astype(str).drop_duplicates().index]
 
     # convert dataframe to dictionary
     teacher_dict = teachers_df.to_dict("records")
@@ -295,25 +288,28 @@ def process_students(
         url=sf_url,
     )
 
-    print(students_df.head(1))
-
     student_dict = students_df.to_dict(orient="records")
 
-    for value in student_dict:
-        class_id = clean_str(value["CID"])
-        fname = clean_str(value["FNAME"])
-        lname = clean_str(value["LNAME"])
-        studentname = fname + " " + lname
-        clid: dict = {}
-        duplicatecheck: list = []
-        process_teachers(
-            studentname,
-            clid,
-            duplicatecheck,
-            class_id,
-            mongo_username,
-            mongo_password,
-        )
+    try:
+        for value in student_dict:
+            class_id = clean_str(value["CID"])
+            fname = clean_str(value["FNAME"])
+            lname = clean_str(value["LNAME"])
+            studentname = fname + " " + lname
+            clid: dict = {}
+            duplicatecheck: list = []
+            process_teachers(
+                studentname,
+                clid,
+                duplicatecheck,
+                class_id,
+                mongo_username,
+                mongo_password,
+            )
+    except Exception as error:
+        print("ERROR - CANNOT PROCESS STUDENT DATA")
+        print(error)
+        sys.exit()
 
 
 # A function to output a json file
@@ -348,28 +344,28 @@ def main() -> None:
     """
 
     # print("The credentials below are for the final report location: ")
-    # s3_bucket = getpass.getpass("Please enter the s3 bucket name:")
-    # s3_access_key_id = getpass.getpass("Please enter the s3 access key id:")
-    # s3_secret_key = getpass.getpass("Please enter the s3 secret key:")
+    # s3_bucket = input("Please enter the s3 bucket name:")
+    # s3_access_key_id = input("Please enter the s3 access key id:")
+    # s3_secret_key = input("Please enter the s3 secret key:")
     # json_file_output_name = input("Please enter the json file name: ")
-    # sf_username = getpass.getpass("Please enter the snowflake username:")
-    # sf_password = getpass.getpass("Please enter the snowflake password:")
-    # sf_url = getpass.getpass("Please enter the snowflake account URL:")
+    # sf_username = input("Please enter the snowflake username:")
+    # sf_password = input("Please enter the snowflake password:")
+    # sf_url = input("Please enter the snowflake account URL:")
+    # mongo_username = input("Please enter the mongo username:")
+    # mongo_password = input("Please enter the mongo password:")
 
     print("The credentials below are for the final report location: ")
-    s3_bucket = input("Please enter the s3 bucket name:")
-    s3_access_key_id = input("Please enter the s3 access key id:")
-    s3_secret_key = input("Please enter the s3 secret key:")
-    json_file_output_name = input("Please enter the json file name: ")
-    sf_username = input("Please enter the snowflake username:")
-    sf_password = input("Please enter the snowflake password:")
-    sf_url = input("Please enter the snowflake account URL:")
-    mongo_username = input("Please enter the mongo username:")
-    mongo_password = input("Please enter the mongo password:")
+    s3_bucket = "sandbox-a1"
+    s3_access_key_id = "AKIAVZXD7XRUTAV3XYHP"
+    s3_secret_key = "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"
+    json_file_output_name = "Swathi"
+    sf_username = "anubis"
+    sf_password = "BrDvkQ*2@&VmMBdhAvZ!pZ6HT^"
+    sf_url = "faa50386.us-east-1"
+    mongo_username = "anubis"
+    mongo_password = "Yu37Wa4whbWfg58G"
 
-    process_students(
-        sf_username, sf_password, sf_url, mongo_username, mongo_password
-    )
+    process_students(sf_username, sf_password, sf_url, mongo_username, mongo_password)
 
     dump_json(
         bucket_name=s3_bucket,
