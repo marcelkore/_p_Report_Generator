@@ -11,8 +11,6 @@ The script will take as input:
     3. Credentials for the final report location (hosted in AWS S3)
 """
 import ast
-
-# import getpass
 import json
 import sys
 

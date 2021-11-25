@@ -1,11 +1,11 @@
 name: Run Pytest and Linting with Pylint and Flake8
 env:
   BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+  AWS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
   AWS_SECRET_KEY: ${{ secrets.ACCESS_SECRET_KEY }}
-  SF_USERNAME: ${{ secrets.SF_USERNAME }}
-  SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
-  SF_URL: ${{ secrets.SF_URL }}
+  SNOW_USERNAME: ${{ secrets.SF_USERNAME }}
+  SNOW_PASSWORD: ${{ secrets.SF_PASSWORD }}
+  SNOW_URL: ${{ secrets.SF_URL }}
   MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
 
@@ -42,11 +42,11 @@ jobs:
     - name: Run Pytest
       env:
         BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-        ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+        AWS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
         AWS_SECRET_KEY: ${{ secrets.ACCESS_SECRET_KEY }}
-        SF_USERNAME: ${{ secrets.SF_USERNAME }}
-        SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
-        SF_URL: ${{ secrets.SF_URL }}
+        SNOW_USERNAME: ${{ secrets.SF_USERNAME }}
+        SNOW_PASSWORD: ${{ secrets.SF_PASSWORD }}
+        SNOW_URL: ${{ secrets.SF_URL }}
         MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
         MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
       run: |

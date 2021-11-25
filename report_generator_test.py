@@ -17,21 +17,23 @@ from report_generator import (
     upload_file_to_s3_secure,
 )
 
+# source ~/OneDrive/_git_projects/environments/git_projects_env/Scripts/activate
+
 # # mongo creds
 
-mng_username = args[1]
-mng_password = args[2]
+mng_username = os.environ.get("MONGO_USERNAME")
+mng_password = os.environ.get("MONGO_PASSWORD")
 
-# # Access credentials stored in github secrets
-# bucket_name = args[3]
-# FILE_NAME = "pytest.json"
-# access_key_id = args[4]
-# aws_secret_key = args[5]
+# Access credentials stored in github secrets
+bucket_name = os.environ.get("BUCKET_NAME")
+FILE_NAME = "pytest.json"
+access_key_id = os.environ.get("AWS_KEY_ID")
+aws_secret_key = os.environ.get("AWS_SECRET_KEY")
 
 # # snowflake credentials
-# sf_username = args[6]
-# sf_password = args[7]
-# sf_url = args[8]
+sf_username = os.environ.get("SNOW_USERNAME")
+sf_password = os.environ.get("SNOW_PASSWORD")
+sf_url = os.environ.get("SNOW_URL")
 
 
 def test_clean_str() -> None:
@@ -93,14 +95,14 @@ def test_upload_file_to_s3_secure() -> None:
     """
 
     # create a test file
-    json_file = {"name": "Jessa"}
+    json_file = {"name": "Jessica"}
     json_file_object = json.dumps(json_file)
 
     # upload the test file to s3
     upload_file_to_s3_secure(
         json_file_object,
         bucket_name,
-        "json_file.json",
+        FILE_NAME,
         access_key_id,
         aws_secret_key,
     )
