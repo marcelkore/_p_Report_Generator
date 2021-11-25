@@ -40,14 +40,14 @@ jobs:
         python -m run_pylint.py
 
     - name: Run Pytest
-      env:
-        BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-        AWS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-        AWS_SECRET_KEY: ${{ secrets.ACCESS_SECRET_KEY }}
-        SNOW_USERNAME: ${{ secrets.SF_USERNAME }}
-        SNOW_PASSWORD: ${{ secrets.SF_PASSWORD }}
-        SNOW_URL: ${{ secrets.SF_URL }}
-        MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
-        MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+      # env:
+      #   BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+      #   AWS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+      #   AWS_SECRET_KEY: ${{ secrets.ACCESS_SECRET_KEY }}
+      #   SNOW_USERNAME: ${{ secrets.SF_USERNAME }}
+      #   SNOW_PASSWORD: ${{ secrets.SF_PASSWORD }}
+      #   SNOW_URL: ${{ secrets.SF_URL }}
+      #   MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+      #   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
       run: |
         python -m pytest
