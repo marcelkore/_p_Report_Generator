@@ -14,6 +14,7 @@ sandbox.ipynb
 .gitignore
 students.csv
 teachers.csv
+report_generator_test.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
