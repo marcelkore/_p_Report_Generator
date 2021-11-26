@@ -18,6 +18,8 @@ it in an s3 bucket defined by the user.
 - mongo db hosted on a mongodb.cloud container containing student data
 - snowflake data warehouse containing teacher information.
 
+## About Report Generator:
+
 The application will use both data stores to generate a report in json listing each student,
 the teacher the student has and the class ID the student is scheduled for.
 
