@@ -1,8 +1,9 @@
 """
 The script processes data in two separate data stores stores
-- PostgreSQL (student data)- This data is hosted in snowflake
-- MongoDB (teacher data)- This data is hosted in a mongo db instance
-  contained in a docker container.
+- Snowflake (student data)- This data is hosted in snowflake
+- MongoDB Cloud (teacher data)- This data is hosted in a mongo db
+  cloud instance
+
 The application will output a report in json listing each student, the
 teacher the student has and the class ID the student is scheduled for.
 The script will take as input:
@@ -31,23 +32,19 @@ def connect_mongo(
     """This function connects to mongo db, retrieves the collection name
     provided specified in the input parameters and returns the dataframe
     of the collection.
-    The collection details are stored in the mongo_creds.csv file for this
-    application.
-    These would be passed as input paramters to this function (if required)
-    :param mong_uri: The mongo uri
+
     :param username: The username
     :param password: The password
-    :param database: The database
-    :param collection: The collection
+
     :return: The dataframe of the results
     """
-
-    database: str = "anubis"
-    collection: str = "teachers"
+    # for simplicity, we will define the database & collection
+    # otherwise, we would pass these as input parameters
+    database: str = "anubis"  # default database name
+    collection: str = "teachers"  # default collection name
 
     try:
         # connect to mongodb
-        # client = MongoClient(mongo_uri, username=username, password=password)
         client = pymongo.MongoClient(
             f"mongodb+srv://{username}:{password}@anubis-cluster.u6kla.mongodb.net/{database}retryWrites=true&w=majority"
         )
@@ -56,7 +53,7 @@ def connect_mongo(
         mydb = client[database]
         mycol = mydb[collection]
 
-        # get data
+        # convert collection into a pandas dataframe
         mongo_df = pd.DataFrame(list(mycol.find()))
 
         client.close()
@@ -77,12 +74,12 @@ def connect_sf(
 ) -> pd.DataFrame:
     """
     This function takes in as input the credentials for connecting to snowflake
-    and a query.  It then connects to snowflake and executes the query.
+    and a query.  It then connects to snowflake and executes a given  query.
+
     This function assumes that the dataset returned is small enough to fit
     in memory.
     :param username: Snowflake username
     :param password: Snowflake password
-    :param role: Snowflake role
     :param sf_url: Snowflake URL
     :param query: Snowflake query
     :return: pandas dataframe of results
@@ -164,7 +161,8 @@ def upload_file_to_s3_secure(
 
 # A function to clean the string
 def clean_str(str1: str) -> str:
-    """clean the string from ),;,\t and ' as not a wanted data
+    """
+    clean the string from ),;,\t and ' as not a wanted data
     :param str1: the string to clean
     :return:The new string with wanted data
     """
@@ -189,7 +187,7 @@ def str_to_dict(str1: str) -> dict:
 # a function to get dictionary values
 def get_dict_values(dic: dict) -> list:
     """
-    geting the dictionary values into the list
+    Insert the dictionary values into the list
     :param dic: The desired dictionary to be converted
     :return :list will be returned with the dictionary values
     """
@@ -222,7 +220,7 @@ def process_teachers(
     mongo_password: str,
 ) -> None:
     """
-    Handling teachers data to get students enrolled to which teacher
+     Process teacher data to get students enrolled to which teacher
     :param studentname:This will be string containing student name
     :param clid:This dictionary will be empty and will be used in the if
      statement
@@ -275,6 +273,12 @@ def process_students(
     It utilizes  a list (data structure) that is initialized at
     the beginning of this script, and populated with the student +
     teacher data to form dictionary of objects.
+    :param sf_username: Pass snowflake username
+    :param sf_password: Pass snowflake password
+    :param sf_url: Pass snowflake url
+    :param mongo_username: Pass mongo username
+    :param mongo_password: Pass mongo password
+
     :return: It will return None but will further call the
     function to get the teachers output
     """
@@ -324,8 +328,13 @@ def dump_json(
     """
     This function will output the json file with all the data
                         that has been appended in the json object
-    :param: None Not required
-    :Return: Not required
+    :param bucket_name: Pass the bucket name
+    :param json_file_output_name: Pass the json file name
+    :param access_key_id: Pass the access key id
+    :param aws_secret_access_key: Pass the secret access key
+
+    :Return: Nothing returned but will output the json file
+             stored in the s3 bucket.
     """
 
     upload_file_to_s3_secure(
@@ -341,8 +350,11 @@ def dump_json(
 def main() -> None:
     """
     Main Function to take input from the user
-    :then calling the Handle_Students Function and calling
-    dump_json function to output our desired result
+    Calls process_students functions which handles
+    the rest of the function calls.
+
+    Calls dump_json to store the json file in s3 bucket.
+
     """
 
     print("The credentials below are for the final report location: ")

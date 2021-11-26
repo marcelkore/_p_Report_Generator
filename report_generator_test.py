@@ -19,7 +19,7 @@ from report_generator import (
 
 # source ~/OneDrive/_git_projects/environments/git_projects_env/Scripts/activate
 
-# # mongo creds
+# mongo creds
 
 mng_username = os.environ.get("MONGO_USERNAME")
 mng_password = os.environ.get("MONGO_PASSWORD")
